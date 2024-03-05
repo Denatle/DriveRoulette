@@ -28,7 +28,7 @@ fn main() -> io::Result<()> {
         pool.execute(move || rename_tree(dir.path(), usize::MAX).unwrap())
     }
     pool.join();
-    
+
     let now2 = now.elapsed();
     println!("{:?}", now2);
     println!("Took {} seconds", now2.as_secs());
@@ -39,10 +39,16 @@ fn rename_tree(start_directory: PathBuf, max_depth: usize) -> io::Result<()> {
     for entry in WalkDir::new(start_directory)
         .contents_first(true).min_depth(1).max_depth(max_depth)
         .into_iter() {
-        let path = entry.unwrap().into_path();
-        // println!("{:?}", path);
-        let new_path = get_new_path(path.clone());
-        rename(path, PathBuf::from(new_path));
+        let some = || -> io::Result<()> {
+            let path = entry.unwrap().into_path();
+            // println!("{:?}", path);
+            let new_path = get_new_path(path.clone());
+            rename(path, PathBuf::from(new_path));
+            Ok(())
+        };
+        if let Err(e) = some() {
+            eprintln!("error: {}", e);
+        }
     }
     Ok(())
 }
