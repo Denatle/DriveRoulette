@@ -10,15 +10,16 @@ struct Cli {
     path: PathBuf,
 }
 
-const DIR: &str = "E:/testland/";
+// const DIR: &str = "E:/testland/";
 
 fn main() -> io::Result<()> {
     let cpus = num_cpus::get();
     println!("{}", cpus);
 
     let now = Instant::now();
-    // let args = Cli::parse();
-    let path = PathBuf::from(DIR);
+    let args = Cli::parse();
+    let path = args.path;
+    rename_tree(path.clone(), 2).unwrap();
 
     let pool = ThreadPool::new(cpus);
     let paths = fs::read_dir(path.clone()).unwrap();
@@ -28,7 +29,6 @@ fn main() -> io::Result<()> {
     }
     pool.join();
     
-    rename_tree(path, 2).unwrap();
     let now2 = now.elapsed();
     println!("{:?}", now2);
     println!("Took {} seconds", now2.as_secs());
