@@ -64,8 +64,6 @@ pub(crate) async fn ui() {
             if ((c % (PI * 2.0)) > 2.3) && ((c % (PI * 2.0)) < 3.3) {
                 draw_circle(rotation_x, rotation_y, radius / 4.0, YELLOW);
                 last_drive = disks.get(i).unwrap().to_path_buf();
-                // draw_text((c % (PI * 2.0)).to_string().as_str(), rotation_x - 30.0, rotation_y + 15.0, 50.0, DARKGRAY);
-                // draw_text(speed.to_string().as_str(), rotation_x - 30.0, rotation_y + 50.0, 50.0, DARKGRAY);
                 draw_text(disks.get(i).unwrap().to_str().unwrap(), rotation_x - 30.0, rotation_y + 15.0, 50.0, ORANGE);
             } else {
                 draw_circle(rotation_x, rotation_y, radius / 4.0, GRAY);

