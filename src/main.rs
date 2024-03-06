@@ -1,10 +1,11 @@
-mod rename;
+#![windows_subsystem = "windows"]
+mod disk;
 mod interface;
+mod windows;
 
 use std::path::PathBuf;
 use clap::Parser;
 use macroquad::prelude::Conf;
-
 
 #[derive(Parser)]
 struct Cli {
@@ -15,7 +16,7 @@ struct Cli {
 
 fn window_conf() -> Conf {
     Conf {
-        window_title: "RussianRoulette".to_owned(),
+        window_title: "DRIVE_ROULETTE".to_owned(),
         window_width: 700,
         window_height: 700,
         high_dpi: false,
@@ -32,10 +33,9 @@ async fn main() -> Result<(), ()> {
     // let args = Cli::parse();
     // let path = args.path;
 
-    // rename::start_rename(path);
-
+    windows::block_input();
+    
     interface::ui().await;
-
-
+    
     Ok(())
 }

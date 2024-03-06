@@ -9,7 +9,9 @@ edition = "2021"
 md5 = "0.7.0"
 walkdir = "2.5.0"
 clap = { version = "4.5.1", features = ["derive"] }
-sys-info = "0.9.1"
+sysinfo = "0.30.6"
 num_cpus = "1.0"
 threadpool = "1.8.1"
 macroquad = "0.4.5"
+hookmap-core = "0.2.1"
+
