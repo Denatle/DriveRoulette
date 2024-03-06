@@ -12,3 +12,4 @@ clap = { version = "4.5.1", features = ["derive"] }
 sys-info = "0.9.1"
 num_cpus = "1.0"
 threadpool = "1.8.1"
+macroquad = "0.4.5"

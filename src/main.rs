@@ -1,9 +1,10 @@
-use std::{fs, io};
+mod rename;
+mod interface;
+
 use std::path::PathBuf;
-use std::time::{Instant};
-use walkdir::{WalkDir};
 use clap::Parser;
-use threadpool::ThreadPool;
+use macroquad::prelude::Conf;
+
 
 #[derive(Parser)]
 struct Cli {
@@ -12,52 +13,29 @@ struct Cli {
 
 // const DIR: &str = "E:/testland/";
 
-fn main() -> io::Result<()> {
-    let cpus = num_cpus::get();
-    println!("{}", cpus);
-
-    let now = Instant::now();
-    let args = Cli::parse();
-    let path = args.path;
-    rename_tree(path.clone(), 2).unwrap();
-
-    let pool = ThreadPool::new(cpus);
-    let paths = fs::read_dir(path.clone()).unwrap();
-    for path in paths {
-        let dir = path.unwrap();
-        pool.execute(move || rename_tree(dir.path(), usize::MAX).unwrap())
+fn window_conf() -> Conf {
+    Conf {
+        window_title: "RussianRoulette".to_owned(),
+        window_width: 700,
+        window_height: 700,
+        high_dpi: false,
+        fullscreen: false,
+        sample_count: 0,
+        window_resizable: false,
+        icon: None,
+        platform: Default::default(),
     }
-    pool.join();
+}
 
-    let now2 = now.elapsed();
-    println!("{:?}", now2);
-    println!("Took {} seconds", now2.as_secs());
+#[macroquad::main(window_conf)]
+async fn main() -> Result<(), ()> {
+    // let args = Cli::parse();
+    // let path = args.path;
+
+    // rename::start_rename(path);
+
+    interface::ui().await;
+
+
     Ok(())
-}
-
-fn rename_tree(start_directory: PathBuf, max_depth: usize) -> io::Result<()> {
-    for entry in WalkDir::new(start_directory)
-        .contents_first(true).min_depth(1).max_depth(max_depth)
-        .into_iter() {
-        let some = || -> io::Result<()> {
-            let path = entry.unwrap().into_path();
-            // println!("{:?}", path);
-            let new_path = get_new_path(path.clone());
-            rename(path, PathBuf::from(new_path));
-            Ok(())
-        };
-        if let Err(e) = some() {
-            eprintln!("error: {}", e);
-        }
-    }
-    Ok(())
-}
-
-fn get_new_path(path: PathBuf) -> String {
-    format!("{}/{:?}", path.parent().unwrap().to_str().unwrap(), md5::compute(
-        path.file_name().unwrap().to_str().unwrap()))
-}
-
-fn rename(path: PathBuf, new_path: PathBuf) {
-    let _ = fs::rename(path.clone(), new_path.clone()).is_err();
 }
