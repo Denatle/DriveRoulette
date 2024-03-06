@@ -8,7 +8,6 @@ edition = "2021"
 [dependencies]
 md5 = "0.7.0"
 walkdir = "2.5.0"
-clap = { version = "4.5.1", features = ["derive"] }
 sysinfo = "0.30.6"
 num_cpus = "1.0"
 threadpool = "1.8.1"

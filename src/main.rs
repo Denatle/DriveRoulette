@@ -3,16 +3,8 @@ mod disk;
 mod interface;
 mod windows;
 
-use std::path::PathBuf;
-use clap::Parser;
 use macroquad::prelude::Conf;
 
-#[derive(Parser)]
-struct Cli {
-    path: PathBuf,
-}
-
-// const DIR: &str = "E:/testland/";
 
 fn window_conf() -> Conf {
     Conf {
@@ -30,9 +22,6 @@ fn window_conf() -> Conf {
 
 #[macroquad::main(window_conf)]
 async fn main() -> Result<(), ()> {
-    // let args = Cli::parse();
-    // let path = args.path;
-
     windows::block_input();
     
     interface::ui().await;
