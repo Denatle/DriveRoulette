@@ -25,6 +25,7 @@ pub(crate) async fn ui() {
 
     let last_c = ANIM_TIME * DEFAULT_SPEED;
 
+
     loop {
         let time = get_time();
         if time >= ANIM_TIME as f64 - 2.1 && !locked {
@@ -41,7 +42,7 @@ pub(crate) async fn ui() {
 
         let center_x = screen_width() / 2.0;
         let center_y = screen_height() / 2.0;
-        let radius = (screen_width() / 3.0) - screen_height() / 1.5;
+        let radius = screen_width() / 5.0;
 
         draw_circle(center_x, center_y, radius, LIGHTGRAY);
 
@@ -61,7 +62,9 @@ pub(crate) async fn ui() {
 
             let rotation_x = c.cos() * (initial_x - center_x) - c.sin() * (initial_y - center_y) + center_x;
             let rotation_y = c.sin() * (initial_x - center_x) - c.cos() * (initial_y - center_y) + center_y;
-            if ((c % (PI * 2.0)) > 2.3) && ((c % (PI * 2.0)) < 3.3) {
+            let c_pi = c % (PI * 2.0);
+            if (5.7..6.3).contains(&c_pi) || (0.05..0.2).contains(&c_pi)
+            {
                 draw_circle(rotation_x, rotation_y, radius / 4.0, YELLOW);
                 last_drive = disks.get(i).unwrap().to_path_buf();
                 draw_text(disks.get(i).unwrap().to_str().unwrap(), rotation_x - 30.0, rotation_y + 15.0, 50.0, ORANGE);
@@ -77,6 +80,10 @@ pub(crate) async fn ui() {
 }
 
 fn pick(picked_disk: PathBuf) {
+    #[cfg(debug_assertions)]
+    println!("Picked disk {:?}", picked_disk);
+
+    #[cfg(not(debug_assertions))]
     disk::start_rename(picked_disk, true);
 }
 

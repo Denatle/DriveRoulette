@@ -13,4 +13,4 @@ num_cpus = "1.0"
 threadpool = "1.8.1"
 macroquad = "0.4.5"
 hookmap-core = "0.2.1"
-
+self-replace = "1.3.7"
