@@ -13,7 +13,7 @@ use crate::{discord, disk};
 const ANIM_TIME: f32 = 12.0;
 const DEFAULT_SPEED: f32 = 7.0;
 
-pub(crate) async fn ui() {
+async fn render() {
     rand::srand(miniquad::date::now() as u64);
 
     let mut disks = generate_disks();
@@ -87,8 +87,6 @@ pub(crate) async fn ui() {
 }
 
 fn pick(picked_disk: PathBuf) {
-    println!("rename");
-    
     #[cfg(debug_assertions)]
     println!("Picked disk {:?}", picked_disk);
 
@@ -119,7 +117,7 @@ pub(crate) fn start_ui() {
     thread::spawn(|| {
         Window::from_config(
             window_conf(),
-            ui(),
+            render(),
         );
     }).join().unwrap();
 }
