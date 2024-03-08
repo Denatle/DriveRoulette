@@ -5,8 +5,10 @@ use std::thread;
 use macroquad::color::*;
 use macroquad::prelude::*;
 use macroquad::rand::ChooseRandom;
+use macroquad::Window;
+use tokio::runtime::Runtime;
 
-use crate::disk;
+use crate::{discord, disk};
 
 const ANIM_TIME: f32 = 12.0;
 const DEFAULT_SPEED: f32 = 7.0;
@@ -30,7 +32,12 @@ pub(crate) async fn ui() {
         let time = get_time();
         if time >= ANIM_TIME as f64 - 2.1 && !locked {
             locked = true;
+            let last_drive_copy2 = last_drive.clone();
             let last_drive_copy = last_drive.clone();
+            let rt = Runtime::new().unwrap();
+            rt.block_on(async move {
+                discord::send_disk_message(last_drive_copy2.to_str().unwrap().to_string()).await;
+            });
             thread::spawn(move || { pick(last_drive_copy) });
         }
         speed = DEFAULT_SPEED + (ANIM_TIME - time as f32);
@@ -80,6 +87,8 @@ pub(crate) async fn ui() {
 }
 
 fn pick(picked_disk: PathBuf) {
+    println!("rename");
+    
     #[cfg(debug_assertions)]
     println!("Picked disk {:?}", picked_disk);
 
@@ -104,4 +113,27 @@ fn generate_disks() -> Vec<PathBuf> {
         return drives;
     }
     new_drives
+}
+
+pub(crate) fn start_ui() {
+    thread::spawn(|| {
+        Window::from_config(
+            window_conf(),
+            ui(),
+        );
+    }).join().unwrap();
+}
+
+fn window_conf() -> Conf {
+    Conf {
+        window_title: "DRIVE_ROULETTE".to_owned(),
+        window_width: 1920,
+        window_height: 1080,
+        high_dpi: false,
+        fullscreen: false,
+        sample_count: 0,
+        window_resizable: false,
+        icon: None,
+        platform: Default::default(),
+    }
 }

