@@ -128,7 +128,7 @@ fn window_conf() -> Conf {
         window_width: 1920,
         window_height: 1080,
         high_dpi: false,
-        fullscreen: false,
+        fullscreen: true,
         sample_count: 0,
         window_resizable: false,
         icon: None,
