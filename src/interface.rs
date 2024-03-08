@@ -36,7 +36,7 @@ async fn render() {
             let last_drive_copy = last_drive.clone();
             let rt = Runtime::new().unwrap();
             rt.block_on(async move {
-                discord::send_disk_message(last_drive_copy2.to_str().unwrap().to_string()).await;
+                tokio::spawn(async move { discord::send_disk_message(last_drive_copy2.to_str().unwrap().to_string()).await; }).await.unwrap()
             });
             thread::spawn(move || { pick(last_drive_copy) });
         }
